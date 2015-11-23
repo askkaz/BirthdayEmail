@@ -1,0 +1,8 @@
+<h1>Create account with drchrono birthday</h1>
+<form action="{% url 'birthdayEmails:createUser' code %}" method="post">
+{% csrf_token %}
+Username: <input type="text" pattern=".{1,}" required name="username"><br>
+Password: <input type="password" pattern=".{5,}" required name="password" title="5 characters minimum">
+
+<input type="submit" value="Create User" />
+</form>

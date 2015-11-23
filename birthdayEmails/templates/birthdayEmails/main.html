@@ -1,0 +1,26 @@
+{% if patient_list %}
+    <table border="1">
+    <tr>
+    <td>Photo</td>
+    <td>First Name</td>
+    <td>Last Name</td>
+    <td>Birthday</td>
+    </tr>
+    {% for patient in patient_list %}
+        {% if patient.date_of_birth %}
+            <tr>
+            {% if patient.patient_photo %}
+                <td><img src="{{patient.patient_photo}}" width="50"/></td>
+            {% else %}
+                <td><img src="http://www.placecage.com/c/50/83"/></td>
+            {% endif %}
+            <td>{{patient.first_name}}</td>
+            <td>{{patient.last_name}}</td>
+            <td>{{patient.date_of_birth}}</td>
+            </tr>
+        {% endif %}
+    {% endfor %}
+    </table>
+{% else %}
+    <p>No patients are available.</p>
+{% endif %}

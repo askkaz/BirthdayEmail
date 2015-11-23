@@ -1,0 +1,10 @@
+<h1>Sign In</h1>
+<form action="{% url 'birthdayEmails:signIn' %}" method="post">
+{% csrf_token %}
+Username: <input type="text" required name="username"><br>
+Password: <input type="password" required name="password">
+<input type="submit" value="Sign In" />
+</form>
+</br>
+<a href="{{ link_url }}">Link drchrono account and make birthday account.</a> 
+
