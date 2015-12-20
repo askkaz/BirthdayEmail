@@ -23,3 +23,10 @@ class TempUser(models.Model):
     expires_timestamp = models.CharField(max_length=100)
     access_token = models.CharField(max_length=100)
     refresh_token = models.CharField(max_length=100)
+
+class DrchronoEmail(models.Model):
+    birthday = models.DateTimeField()
+    sent_date = models.DateTimeField(blank=True)
+    subject = models.CharField(max_length=77)
+    body = models.TextField()
+    patient_id = models.IntegerField()

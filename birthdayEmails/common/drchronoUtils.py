@@ -1,4 +1,5 @@
 import datetime, pytz, requests, os
+from operator import itemgetter
 
 #Birthday Email Keys
 BIRTHDAY_CLIENT_SECRET = os.environ['BIRTHDAY_CLIENT_SECRET']
@@ -37,7 +38,8 @@ def getDrchronoPatientDetails(access_token):
         data = requests.get(patients_url, headers=headers).json()
         patients.extend(data['results'])
         patients_url = data['next'] # A JSON null on the last page
-    return patients
+
+    return sorted(patients, key=itemgetter('last_name')) 
 
 def refreshDrchronoAccessToken(refresh_token):
     response = requests.post('https://drchrono.com/o/token/', data={

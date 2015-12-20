@@ -1,0 +1,63 @@
+table {
+    height: 100%;
+}
+tbody {
+    overflow-y: scroll;
+    height: 100%;
+    width: 100%;
+}
+.row {
+    height: 100%;
+}
+.patient-id {
+    display: none;
+}
+.table-responsive {
+    height:100%;
+    overflow-y: visible;
+}
+ul {
+    padding-left: 20px;
+}
+.container {
+    height: 85%;
+}
+
+.col-sm-8 {
+    height: 30%;
+    height: calc(100% - 280px);
+}
+.col-sm-4 {
+    overflow: auto;
+}
+.navbar-header {
+    float: left;
+}
+.img-patient {
+    max-width: 50px;
+    max-height: 50px;
+    margin: 0 auto;
+}
+.form-group {
+    margin: 0 0 5px 0;
+}
+.navbar {
+    margin: 0 0 5px 0;
+}
+.table-hover > tbody > tr.hidden-table:hover > td {
+     background-color: white;
+ }
+
+@media (min-width: 768px) {
+    .form-group {
+        margin: 0 0 15px 0;
+    }
+
+    .navbar {
+        margin: 0 0 20px 0;
+    }
+    .col-sm-8 {
+        height: 100%;
+    }
+
+}

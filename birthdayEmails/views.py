@@ -1,13 +1,13 @@
-from django.shortcuts import render
+from django.shortcuts import render, render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views import generic
 from .common.drchronoUtils import *
 from django.utils import timezone
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
-from .models import TempUser, DrchronoUser, User
+from .models import TempUser, DrchronoUser, User, DrchronoEmail
 
 def index(request):
     return render(request, 'birthdayEmails/login.html', {'link_url': getDrchronoLinkURL()})
@@ -59,6 +59,11 @@ def main(request):
     logged_in_user.check_access_token()
     access_token = logged_in_user.access_token
     patient_details = getDrchronoPatientDetails(access_token)
+    pending_emails = DrchronoEmail.objects.filter(sent_date__isnull=True)
+    sent_emails = DrchronoEmail.objects.filter(sent_date__isnull=False).filter(sent_date__gt=timezone.now()-datetime.timedelta(weeks=4))
+    #attach patient details to each of the two records and remove from patient details array
+    #for i in xrange(len(pending_emails)):
+    #    pending_emails[i]['patient_id']
     return render(request, 'birthdayEmails/main.html', {'patient_list': patient_details})
 
 def signIn(request):
@@ -75,5 +80,14 @@ def signIn(request):
     else:
         # Return an 'invalid login' error message.
         return HttpResponse('BAD')
+
+@login_required
+def signOut(request):
+    logout(request)
+    return HttpResponseRedirect(reverse('birthdayEmails:index'))
+
+@login_required
+def toggle_patient(request, patient_id):
+    return render_to_response({"test":"test"})
 
 
