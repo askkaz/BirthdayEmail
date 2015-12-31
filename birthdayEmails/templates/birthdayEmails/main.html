@@ -65,7 +65,6 @@
     <td class="patient-id">ID</td>
     <td class="patient-email-subject">Subject</td>
     <td class="patient-email-body">Body</td>
-    <td class="patient-email-sent">Sent Date</td>
     <td>Photo</td>
     <td>Name</td>
     <td>Birthday</td>
@@ -87,16 +86,9 @@
         {% if patient.birthdayEmail == "" %}
             <td class="patient-email-subject"></td>
             <td class="patient-email-body"></td>
-            <td class="patient-email-sent"></td>
         {% else %}
             <td class="patient-email-subject">{{ patient.birthdayEmail.subject }}</td>
             <td class="patient-email-body">{{ patient.birthdayEmail.body }}</td>
-            {% if patient.birthdayEmail.sent_date %}
-              <td class="patient-email-sent">{{ patient.birthdayEmail.sent_date }}</td>
-            {% else %}
-              <td class="patient-email-sent"></td>
-            {% endif %}
-
         {% endif %}
 
 
@@ -108,14 +100,16 @@
         <td class="patient-name">{{patient.first_name}} {{patient.last_name}}</td>
         <td class="patient-birthday">{{ patient.date_of_birth }}</td>
         <td>
-        <ul>
         {% if not patient.date_of_birth %}
-            <li>No DOB. <a>Add One!</a></li>
+            No DOB. <a>Add One!</a><br>
         {% endif %}
         {% if not patient.email %}
-            <li>No email address. <a>Add One!</a></li>
+            No email address. <a>Add One!</a>
         {% endif %}
-        </ul>
+        {% if patient.birthdayEmail.sent_date %}
+            Email sent.
+        {% endif %}
+        
         </td>
 
         </tr>
