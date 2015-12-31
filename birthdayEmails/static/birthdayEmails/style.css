@@ -6,15 +6,26 @@ tbody {
     height: 100%;
     width: 100%;
 }
+.table>tbody>tr>td {
+    padding: 2px;
+    vertical-align: middle;
+}
+h3 {
+    color: #2a414a;
+}
 .row {
     height: 100%;
 }
-.patient-id {
+.patient-id,
+.patient-email-body,
+.patient-email-subject,
+.patient-email-sent {
     display: none;
 }
 .table-responsive {
     height:100%;
     overflow-y: visible;
+    background-color: #c7c4cb;
 }
 ul {
     padding-left: 20px;
@@ -43,9 +54,13 @@ ul {
 }
 .navbar {
     margin: 0 0 5px 0;
+    background-color: #c7c4cb;
 }
 .table-hover > tbody > tr.hidden-table:hover > td {
-     background-color: white;
+     background-color: #fcc;
+ }
+ .table-hover > tbody > tr.hidden-table > td {
+     background-color: #fcc;
  }
 
 @media (min-width: 768px) {
@@ -60,4 +75,45 @@ ul {
         height: 100%;
     }
 
+}
+.bgimage {
+background-image: url('images/108Hsepia.jpg');
+height:100%;
+background-size: 100%;
+}
+.bgimage-inside {
+
+}
+.absolute-center {
+    margin: auto;
+    position: absolute;
+    top:0;
+    left:0;
+    bottom: 0;
+    right:0;
+    background-color: #c7c4cb;
+    border-radius: 10px;
+}
+.absolute-center.is-responsive {
+    width:50%;
+    height: 230px;
+    min-width: 200px;
+
+    max-width: 300px;
+
+    padding: 0px;
+}
+body {
+    background: #2a414a;
+}
+.sign-in {
+    background: #c7c4cb;
+    border-radius: 10px;
+}
+.btn-block {
+    background-color: #88848c;
+}
+
+.form-label {
+    color: #c7c4cb;
 }

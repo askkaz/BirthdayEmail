@@ -8,6 +8,7 @@
       <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <link rel="stylesheet" href="{% static 'birthdayEmails/style.css' %}"/>
+      <link rel="icon" href="{% static 'birthdayEmails/images/favicon.ico' %}"/>
    </head>
 <body>
 <nav class="navbar navbar-default">
@@ -16,7 +17,6 @@
       <a class="navbar-brand" href="#">drchrono Birthday Emails</a>
     </div>
     <button class="btn btn-default navbar-btn pull-right" data-toggle="modal" data-target=".bs-signout-modal-sm">Signout</button>
-
   </div>
 </nav>   
 
@@ -37,23 +37,25 @@
 {% if patient_list %}
 <div class="row">
 <div class='col-sm-4'>
-<form action="{% url 'birthdayEmails:signOut' %}">
+  <form action="{% url 'birthdayEmails:saveEmail' %}" method="post">
     {% csrf_token %}
+    {{ form.patientId }}
+    {{ form.patientBirthday }}
     <div class="form-group">
-      <label for="patientName">Patient</label>
-      <input type="text" class="form-control" id="patientName" placeholder="Select one from the list..." disabled>
+       <label for="patientName" class="form-label">Patient</label>
+       {{ form.patientName }}
     </div>
-    <div class="form-group">
-      <label for="emailSubject">Subject</label>
-      <input type="text" class="form-control" id="emailSubject" required>
-    </div>
-    <div class="form-group">
-      <label for="emailBody">Body</label>
-      <textarea class="form-control" id="emailBody" rows="3" required></textarea>
-    </div>
-    <input class="btn" type="submit" value="Add Email to Pending Queue">
-
-</form>
+    <div class="form-group hidden">
+       <label for="emailSubject" class="form-label">Subject</label>
+       {{ form.emailSubject }}
+     </div>
+     <div class="form-group hidden">
+       <label for="emailBody" class="form-label">Body</label>
+       {{ form.emailBody }}
+     </div>
+    <input type="submit" name = "button" value="Save" class="btn hidden save-btn"/>
+    <input type="submit" name = "button" value="Delete" class="btn hidden delete-btn"/>
+  </form>
 </div>
 <div class='col-sm-8'>
   <div class="table-responsive">
@@ -61,32 +63,57 @@
     <thead>
     <tr>
     <td class="patient-id">ID</td>
+    <td class="patient-email-subject">Subject</td>
+    <td class="patient-email-body">Body</td>
+    <td class="patient-email-sent">Sent Date</td>
     <td>Photo</td>
-    <td>First Name</td>
-    <td>Last Name</td>
+    <td>Name</td>
     <td>Birthday</td>
     <td>Status</td>
     </tr>
     </thead>
     <tbody>
     {% for patient in patient_list %}
-        <tr {% if not patient.date_of_birth or not patient.email %}class="hidden-table"{% endif %}>
+        <tr {% if not patient.date_of_birth or not patient.email %}
+              class="hidden-table"
+            {% elif patient.birthdayEmail.sent_date %}
+              class="active-table success"
+            {% elif patient.birthdayEmail.subject %}
+              class="active-table info"
+            {% else %}
+              class="active-table"
+            {% endif %}>
         <td class="patient-id">{{ patient.id }}</td>
+        {% if patient.birthdayEmail == "" %}
+            <td class="patient-email-subject"></td>
+            <td class="patient-email-body"></td>
+            <td class="patient-email-sent"></td>
+        {% else %}
+            <td class="patient-email-subject">{{ patient.birthdayEmail.subject }}</td>
+            <td class="patient-email-body">{{ patient.birthdayEmail.body }}</td>
+            {% if patient.birthdayEmail.sent_date %}
+              <td class="patient-email-sent">{{ patient.birthdayEmail.sent_date }}</td>
+            {% else %}
+              <td class="patient-email-sent"></td>
+            {% endif %}
+
+        {% endif %}
+
+
         {% if patient.patient_photo %}
             <td><img class="img-responsive img-patient" src="{{patient.patient_photo}}"/></td>
         {% else %}
             <td><img class="img-responsive img-patient" src="http://www.placecage.com/c/50/83"/></td>
         {% endif %}
-        <td>{{patient.first_name}}</td>
-        <td>{{patient.last_name}}</td>
-        <td>{{patient.date_of_birth}}</td>
+        <td class="patient-name">{{patient.first_name}} {{patient.last_name}}</td>
+        <td class="patient-birthday">{{ patient.date_of_birth }}</td>
         <td>
         <ul>
         {% if not patient.date_of_birth %}
-            <li>No DOB on File. <a>Add One!</a></li>
+            <li>No DOB. <a>Add One!</a></li>
         {% endif %}
         {% if not patient.email %}
-            <li>No email address on File. <a>Add One!</a></li>
+            <li>No email address. <a>Add One!</a></li>
         {% endif %}
         </ul>
         </td>

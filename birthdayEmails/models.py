@@ -25,8 +25,9 @@ class TempUser(models.Model):
     refresh_token = models.CharField(max_length=100)
 
 class DrchronoEmail(models.Model):
-    birthday = models.DateTimeField()
-    sent_date = models.DateTimeField(blank=True)
+    send_date = models.DateTimeField()
+    sent_date = models.DateTimeField(blank=True, null=True)
     subject = models.CharField(max_length=77)
     body = models.TextField()
     patient_id = models.IntegerField()
+    user = models.ForeignKey(DrchronoUser, on_delete=models.CASCADE)

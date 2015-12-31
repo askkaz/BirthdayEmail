@@ -13,4 +13,5 @@ urlpatterns = [
     url(r'^signOut',views.signOut, name="signOut"),
     url(r'^main',views.main, name="main"),
     url(r'^toggle_patient_(?P<patient_id>\d+)/$',views.toggle_patient, name="toggle_patient"),
+    url(r'^saveEmail',views.saveEmail, name="saveEmail"),
 ]

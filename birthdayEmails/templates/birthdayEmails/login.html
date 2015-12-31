@@ -1,10 +1,49 @@
-<h1>Sign In</h1>
-<form action="{% url 'birthdayEmails:signIn' %}" method="post">
-{% csrf_token %}
-Username: <input type="text" required name="username"><br>
-Password: <input type="password" required name="password">
-<input type="submit" value="Sign In" />
-</form>
-</br>
-<a href="{{ link_url }}">Link drchrono account and make birthday account.</a> 
+{% load staticfiles %}
+{% load bootstrap3 %}
+{% bootstrap_css %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>drchrono Birthday Emails</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{% static 'birthdayEmails/style.css' %}"/>
+  <link rel="icon" href="{% static 'birthdayEmails/images/favicon.ico' %}"/>
+</head>
+<body class="landing-page-body">
 
+
+  <div class="container bgimage">
+   <div class="row bgimage-inside">
+    <div class="absolute-center is-responsive">
+
+    <div class="col-sm-12 sign-in">
+        <h3>Sign In</h3>
+        <form action="{% url 'birthdayEmails:signIn' %}" method="post">
+          {% csrf_token %}
+          <div class="form-group input-group">
+            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+            <input class="form-control" type="text" required name="username" placeholder="username">
+          </div>
+          <div class="form-group input-group">
+            <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+            <input class="form-control" type="password" required name="password" placeholder="password">
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-default btn-block"/>Sign In</button>
+          </div>
+          <div class="form-group text-center">
+            <a href="{{ link_url }}">Link drchrono account</a> 
+          </div>
+        </form>
+      </br>
+
+    </div>
+  </div> 
+</div>
+</div>
+</div>
+
+
+</body>
+</html>
