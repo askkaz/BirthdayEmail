@@ -1,3 +1,24 @@
+body {
+    background: #2a414a;
+}
+h3 {
+    color: #2a414a;
+}
+.btn-block {
+    background-color: #88848c;
+}
+
+/*NAVBAR*/
+.navbar-header {
+    float: left;
+}
+.navbar {
+    margin: 0 0 5px 0;
+    background-color: #c7c4cb;
+}
+/*END NAVBAR*/
+
+/*TABLE FOR MAIN PAGE*/
 table {
     height: 100%;
 }
@@ -6,34 +27,52 @@ tbody {
     height: 100%;
     width: 100%;
 }
-.table>tbody>tr>td {
-    padding: 2px;
-    vertical-align: middle;
-}
-h3 {
-    color: #2a414a;
-}
-.row {
-    height: 100%;
-}
-.patient-id,
-.patient-email-body,
-.patient-email-subject,
-.patient-email-sent {
-    display: none;
-}
 .table-responsive {
     height:100%;
     overflow-y: visible;
     background-color: #c7c4cb;
 }
-ul {
-    padding-left: 20px;
+.table>tbody>tr>td {
+    padding: 2px;
+    vertical-align: middle;
+    text-align: center;
+}
+.patient-id,
+.patient-email-body,
+.patient-email-subject,
+.patient-email-sent,
+.patient-email-address {
+    display: none;
+}
+.img-patient {
+    max-width: 50px;
+    max-height: 50px;
+    margin: 0 auto;
+}
+.table-hover > tbody > tr.hidden-table:hover > td {
+    background-color: #fcc;
+}
+.table-hover > tbody > tr.hidden-table > td {
+    background-color: #fcc;
+}
+/*END TABLE FOR MAIN PAGE*/
+
+/*FORMS ON MAIN PAGE*/
+.form-group {
+    margin: 0 0 5px 0;
+}
+.form-label {
+    color: #c7c4cb;
+}
+/*END FORMS ON MAIN PAGE*/
+
+/*GRID LAYOUT*/
+.row {
+    height: 100%;
 }
 .container {
     height: 85%;
 }
-
 .col-sm-8 {
     height: 30%;
     height: calc(100% - 280px);
@@ -41,48 +80,13 @@ ul {
 .col-sm-4 {
     overflow: auto;
 }
-.navbar-header {
-    float: left;
-}
-.img-patient {
-    max-width: 50px;
-    max-height: 50px;
-    margin: 0 auto;
-}
-.form-group {
-    margin: 0 0 5px 0;
-}
-.navbar {
-    margin: 0 0 5px 0;
-    background-color: #c7c4cb;
-}
-.table-hover > tbody > tr.hidden-table:hover > td {
-     background-color: #fcc;
- }
- .table-hover > tbody > tr.hidden-table > td {
-     background-color: #fcc;
- }
+/*END GRID LAYOUT*/
 
-@media (min-width: 768px) {
-    .form-group {
-        margin: 0 0 15px 0;
-    }
-
-    .navbar {
-        margin: 0 0 20px 0;
-    }
-    .col-sm-8 {
-        height: 100%;
-    }
-
-}
+/*INDEX PAGE*/
 .bgimage {
 background-image: url('images/108Hsepia.jpg');
 height:100%;
 background-size: 100%;
-}
-.bgimage-inside {
-
 }
 .absolute-center {
     margin: auto;
@@ -95,25 +99,26 @@ background-size: 100%;
     border-radius: 10px;
 }
 .absolute-center.is-responsive {
-    width:50%;
+    width: 50%;
     height: 230px;
     min-width: 200px;
-
     max-width: 300px;
-
     padding: 0px;
-}
-body {
-    background: #2a414a;
 }
 .sign-in {
     background: #c7c4cb;
     border-radius: 10px;
 }
-.btn-block {
-    background-color: #88848c;
-}
+/*END INDEX PAGE*/
 
-.form-label {
-    color: #c7c4cb;
+@media (min-width: 768px) {
+    .form-group {
+        margin: 0 0 15px 0;
+    }
+    .navbar {
+        margin: 0 0 20px 0;
+    }
+    .col-sm-8 {
+        height: 100%;
+    }
 }

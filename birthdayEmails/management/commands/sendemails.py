@@ -13,12 +13,23 @@ class Command(BaseCommand):
             help='Send all pending emails, regardless of whether the date has passed.')
 
     def handle(self, *args, **options):
+        testing = True
         emails = DrchronoEmail.objects.filter(sent_date = None)
         if not options['force']:
             emails = emails.filter(send_date__lt=timezone.now())
         for email in emails:
-            send_mail(email.subject.strip('\n'), email.body, 'drchronobirthday@gmail.com',
-            ['adamkaz@gmail.com'], fail_silently=False)
+            if testing:
+                info = "\n(this email would normally go to: " + email.email_address +")"
+                email_address = ['adamkaz@gmail.com']
+            else:
+                email_address = [email.email_address]
+            send_mail(
+                email.subject.strip('\n'), 
+                email.body + info, 
+                'drchronobirthday@gmail.com', 
+                email_address, 
+                fail_silently=False
+            )
             email.sent_date=timezone.now()
             email.save()
         num_emails = len(emails)

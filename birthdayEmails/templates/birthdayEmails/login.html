@@ -1,22 +1,5 @@
-{% load staticfiles %}
-{% load bootstrap3 %}
-{% bootstrap_css %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>drchrono Birthday Emails</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="{% static 'birthdayEmails/style.css' %}"/>
-  <link rel="icon" href="{% static 'birthdayEmails/images/favicon.ico' %}"/>
-</head>
-<body class="landing-page-body">
-
-
-  <div class="container bgimage">
-   <div class="row bgimage-inside">
-    <div class="absolute-center is-responsive">
-
+{% extends "birthdayEmails/birthdayCenterContent.html" %}
+{% block content %}
     <div class="col-sm-12 sign-in">
         <h3>Sign In</h3>
         <form action="{% url 'birthdayEmails:signIn' %}" method="post">
@@ -37,13 +20,5 @@
           </div>
         </form>
       </br>
-
     </div>
-  </div> 
-</div>
-</div>
-</div>
-
-
-</body>
-</html>
+{% endblock %}

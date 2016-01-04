@@ -16,13 +16,15 @@ def getDrchronoAuth(code):
         'client_id': BIRTHDAY_CLIENT_ID,
         'client_secret': BIRTHDAY_CLIENT_SECRET,
     })
-    response.raise_for_status()
-    data = response.json()
-    result = {
-        'access_token': data['access_token'],
-        'refresh_token': data['refresh_token'],
-        'expires_timestamp': datetime.datetime.now(pytz.utc) + datetime.timedelta(seconds=data['expires_in']),
-    }
+    if response.status_code == requests.codes.ok:
+        data = response.json()
+        result = {
+            'access_token': data['access_token'],
+            'refresh_token': data['refresh_token'],
+            'expires_timestamp': datetime.datetime.now(pytz.utc) + datetime.timedelta(seconds=data['expires_in']),
+        }
+    else:
+        result = None
     return result
 
 def getDrchronoLinkURL():
@@ -38,7 +40,6 @@ def getDrchronoPatientDetails(access_token):
         data = requests.get(patients_url, headers=headers).json()
         patients.extend(data['results'])
         patients_url = data['next'] # A JSON null on the last page
-
     return sorted(patients, key=itemgetter('last_name')) 
 
 def refreshDrchronoAccessToken(refresh_token):
@@ -48,11 +49,13 @@ def refreshDrchronoAccessToken(refresh_token):
         'client_id': BIRTHDAY_CLIENT_ID,
         'client_secret': BIRTHDAY_CLIENT_SECRET,
         })
-    response.raise_for_status()
-    data = response.json()
-    result = {
-        'access_token': data['access_token'],
-        'refresh_token': data['refresh_token'],
-        'expires_timestamp': datetime.datetime.now(pytz.utc) + datetime.timedelta(seconds=data['expires_in']),
-    }
+    if response.status_code == requests.codes.ok:
+        data = response.json()
+        result = {
+            'access_token': data['access_token'],
+            'refresh_token': data['refresh_token'],
+            'expires_timestamp': datetime.datetime.now(pytz.utc) + datetime.timedelta(seconds=data['expires_in']),
+        }
+    else:
+        result = None
     return result

@@ -20,24 +20,18 @@ def signup(request):
     if not code:
         return HttpResponseRedirect(reverse('birthdayEmails:index'))
     else:
-        auth_data = getDrchronoAuth(code)
-        #TODO - add check for no data back (bad code)
-        auth_data['code'] = code
-        TempUser.objects.create(**auth_data)
+        if not TempUser.objects.filter(code=code).first():
+            auth_data = getDrchronoAuth(code)
+            if not auth_data:
+                return render(request, 'birthdayEmails/redirectToIndexWithMessage.html',{'message':"Something went wrong... Let's try again."})
+            auth_data['code'] = code
+            TempUser.objects.create(**auth_data)
         return render(request, 'birthdayEmails/signup.html', {
             'code': code
         })
 
-def success(request, code):
-    return HttpResponse('THANKS')
-
 def newTokenNeeded(request):
-    return render(request, 'birthdayEmails/newtoken.html')
-
-def invalidSignUpCredentials(request, code):
-    return render(request, 'birthdayEmails/signup.html', {
-        'code': code
-    })
+    return render(request, 'birthdayEmails/redirectToIndexWithMessage.html',{'message':"It's been too long... We need to re-validate your drchrono account."})
 
 def createUser(request, code):
     if request.method == "POST":
@@ -52,7 +46,9 @@ def createUser(request, code):
             birthday_user = DrchronoUser(user=drchrono_user, access_token=temp_user_data.access_token, 
                 refresh_token=temp_user_data.refresh_token, expires_timestamp=temp_user_data.expires_timestamp)
             birthday_user.save()
-            return HttpResponseRedirect(reverse('birthdayEmails:success', args=(code,)))
+            user = authenticate(username=username, password=password)
+            login(request, user)
+            return HttpResponseRedirect(reverse('birthdayEmails:main'))
         else:
             return HttpResponseRedirect(reverse('birthdayEmails:newTokenNeeded'))
 
@@ -90,10 +86,10 @@ def signIn(request):
             return HttpResponseRedirect(reverse('birthdayEmails:main'))
         else:
             # Return a 'disabled account' error message
-            return HttpResponse('INACTIVE')
+            return render(request, 'birthdayEmails/redirectToIndexWithMessage.html',{'message':"This account is inactive."})
     else:
         # Return an 'invalid login' error message.
-        return HttpResponse('BAD')
+        return render(request, 'birthdayEmails/redirectToIndexWithMessage.html',{'message':"Invalid credentials..."})
 
 @login_required
 def signOut(request):
@@ -134,16 +130,12 @@ def saveEmail(request):
                         subject = form_data['emailSubject'],
                         body = form_data['emailBody'],
                         patient_id = this_patient,
-                        user = this_user)
+                        user = this_user,
+                        email_address = form_data['patientEmailAddress'])
             elif action == 'Delete':
                 existing_email.delete()
-
             return HttpResponseRedirect(reverse('birthdayEmails:main'))
-
-    # if a GET (or any other method) we'll create a blank form
+    # if a GET (or any other method) create a blank form
     else:
         form = EmailForm()
-
     return HttpResponseRedirect(reverse('birthdayEmails:main'))
-
-
