@@ -1,0 +1,131 @@
+{% load staticfiles %}
+{% load bootstrap3 %}
+{% bootstrap_css %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>drchrono Birthday Emails</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{% static 'birthdayEmails/style.css' %}"/>
+  <link rel="icon" href="{% static 'birthdayEmails/images/favicon.ico' %}"/>
+</head>
+<body>
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">drchrono Birthday Emails</a>
+      </div>
+      <button class="btn btn-default navbar-btn pull-right" data-toggle="modal" data-target=".bs-signout-modal-sm">Signout</button>
+    </div>
+  </nav>
+  <div class="modal bs-signout-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-header"><h4>Signout <i class="fa fa-lock"></i></h4></div>
+        <div class="modal-body"><i class="fa fa-question-circle"></i> Are you sure you want to signout?<a href="{% url 'birthdayEmails:signOut' %}" class="btn btn-primary btn-block">Signout</a></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    {% if patient_list %}
+      <div class="row">
+        <div class='col-sm-4'>
+          <form action="{% url 'birthdayEmails:saveEmail' %}" method="post">
+            {% csrf_token %}
+            {{ form.patientId }}
+            {{ form.patientBirthday }}
+            {{ form.patientEmailAddress }}
+            <div class="form-group">
+              <label for="patientName" class="form-label">Patient</label>
+              {{ form.patientName }}
+            </div>
+            <div class="form-group hidden">
+              <label for="emailSubject" class="form-label">Subject</label>
+              {{ form.emailSubject }}
+            </div>
+            <div class="form-group hidden">
+              <label for="emailBody" class="form-label">Body</label>
+              {{ form.emailBody }}
+            </div>
+            <input type="submit" name = "button" value="Save" class="btn hidden save-btn"/>
+            <input type="submit" name = "button" value="Delete" class="btn hidden delete-btn"/>
+          </form>
+        </div>
+        <div class='col-sm-8'>
+          <div class="table-responsive">
+            <table class="table table-hover table-bordered">
+              <thead>
+                <tr>
+                  <td class="patient-id">ID</td>
+                  <td class="patient-email-subject">Subject</td>
+                  <td class="patient-email-body">Body</td>
+                  <td class="patient-email-address">Email Address</td>
+                  <td>Photo</td>
+                  <td>Name</td>
+                  <td>Birthday</td>
+                  <td>Status</td>
+                </tr>
+              </thead>
+              <tbody>
+                {% for patient in patient_list %}
+                  <tr {% if not patient.date_of_birth or not patient.email %}
+                    class="hidden-table"
+                  {% elif patient.birthdayEmail.sent_date %}
+                    class="active-table success"
+                  {% elif patient.birthdayEmail.subject %}
+                    class="active-table info"
+                  {% else %}
+                    class="active-table"
+                  {% endif %}>
+                    <td class="patient-id">{{ patient.id }}</td>
+                    {% if patient.birthdayEmail == "" %}
+                      <td class="patient-email-subject"></td>
+                      <td class="patient-email-body"></td>
+                    {% else %}
+                      <td class="patient-email-subject">{{ patient.birthdayEmail.subject }}</td>
+                      <td class="patient-email-body">{{ patient.birthdayEmail.body }}</td>
+                    {% endif %}
+                    <td class="patient-email-address">{{ patient.email }}</td>
+                    {% if patient.patient_photo %}
+                      <td><img class="img-responsive img-patient" src="{{patient.patient_photo}}"/></td>
+                    {% else %}
+                      <td><img class="img-responsive img-patient" src="http://www.placecage.com/c/50/83"/></td>
+                    {% endif %}
+                    <td class="patient-name">{{patient.first_name}} {{patient.last_name}}</td>
+                    <td class="patient-birthday">{{ patient.date_of_birth }}</td>
+                    <td>
+                    {% if not patient.date_of_birth %}
+                      No DOB.<br>
+                    {% endif %}
+                    {% if not patient.email %}
+                      No email address.
+                    {% endif %}
+                    {% if patient.birthdayEmail.subject %}
+                      {% if patient.birthdayEmail.sent_date %}
+                        Email sent.
+                      {% else %}
+                        Email pending.
+                      {% endif %}
+                    {% endif %}
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <p>No patients are available.</p>
+    {% endif %}
+  </div>
+<script type='text/javascript' src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script type='text/javascript' src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore-min.js"></script>
+<script type='text/JavaScript' src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script type='text/javascript' src="{% static 'birthdayEmails/toggle_patient.js' %}"></script>
+</body>
+</html>
