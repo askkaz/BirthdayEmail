@@ -8,10 +8,10 @@ I'm currently hosting this at [Python Anywhere](http://adamkaz.pythonanywhere.co
 The first step in using this app is to give permission for the app to use details from a drchrono account.  The way that the API works, only one account can be linked for an unpublished app (mine).  The app manages the authentication with drchrono and updates access tokens when they are within 30 min of expiration.
 
 After succesfully creating an account, the user is presented with a list of patients.  These patients are in 1 of 4 color categories based on their status:
-*Patients in red are not selectable, because they are either missing an email or a birthday within drchrono.  (I originally planned to create a modal to add these details, but it's either not possible or I wasn't able to figure out how to modify patient details from the API).
-*Patients in blue have handcrafted emails just waiting to be sent to them.  Their birthday just hasn't passed yet.  These emails can still be edited or deleted.
-*Patients in green have had amazingly curated messages sent to them on their birthday (within the past month).  These emails can be deleted if the doctor wants to get cracking on next year's message.
-*Patients in gray have no messages queued and can be selected to begin writing a birthday greeting.
+* Patients in red are not selectable, because they are either missing an email or a birthday within drchrono.  (I originally planned to create a modal to add these details, but it's either not possible or I wasn't able to figure out how to modify patient details from the API).
+* Patients in blue have handcrafted emails just waiting to be sent to them.  Their birthday just hasn't passed yet.  These emails can still be edited or deleted.
+* Patients in green have had amazingly curated messages sent to them on their birthday (within the past month).  These emails can be deleted if the doctor wants to get cracking on next year's message.
+* Patients in gray have no messages queued and can be selected to begin writing a birthday greeting.
 
 Emails are sent twice daily, based on whether the date has passed.  There is a command on the server that will send all the emails regardless of date, which is why there may be some sent messages that don't make sense.
 
