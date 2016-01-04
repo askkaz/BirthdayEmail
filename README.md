@@ -4,6 +4,8 @@ This app allows doctors to write a personalized birthday greeting to a patient, 
 ## Status
 I'm currently hosting this at [Python Anywhere](http://adamkaz.pythonanywhere.com/), which was a pretty simple way to get this published.  You'll need a username and password to play with the sample account - feel free to email me at drchronobirthday (at) gmail.com to get one.
 
+Emails are currently sent to my personal email address (with the real email address denoted in the message).  I didn't want to be spamming people if these were actual email addresses in the drchrono sample account set up.
+
 ## What It Does
 The first step in using this app is to give permission for the app to use details from a drchrono account.  The way that the API works, only one account can be linked for an unpublished app (mine).  The app manages the authentication with drchrono and updates access tokens when they are within 30 min of expiration.
 
