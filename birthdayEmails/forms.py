@@ -48,3 +48,19 @@ class EmailForm(forms.Form):
             'id': 'emailBody',
             'rows': '3'
             }))
+
+class LoginForm(forms.Form):
+    username = forms.CharField(
+        widget=forms.TextInput(attrs={
+            'required': 'true',
+            'name': 'username',
+            'placeholder': 'username',
+            'class': 'form-control',
+        }))
+    password = forms.CharField(
+        widget = forms.PasswordInput(attrs={
+            'required': 'true',
+            'name': 'password',
+            'placeholder': 'password',
+            'class': 'form-control',
+        }))

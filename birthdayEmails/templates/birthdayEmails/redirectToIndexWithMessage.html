@@ -1,8 +1,0 @@
-{% extends "birthdayEmails/birthdayCenterContent.html" %}
-
-{% block content %}
-<script>setTimeout(function() {window.location.href = "{% url 'birthdayEmails:index' %}"}, 5000);</script>
-<div class="col-sm-12 sign-in">
-    <h4>{{ message }}</h4>
-</div>
-{% endblock %}

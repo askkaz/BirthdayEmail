@@ -87,7 +87,7 @@ tbody {
     background-image: url('images/108Hsepia.jpg');
     height: 100%;
     background-size: 100%;
-    background-repeat: none;
+    background-repeat: no-repeat;
     background-position: center;
 }
 .absolute-center {
@@ -110,6 +110,10 @@ tbody {
 .sign-in {
     background: #c7c4cb;
     border-radius: 10px;
+}
+.errorlist{
+    color: red;
+    list-style-type: none;
 }
 /*END INDEX PAGE*/
 

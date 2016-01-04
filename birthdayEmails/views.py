@@ -7,13 +7,14 @@ from django.utils import timezone
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from .forms import EmailForm
+from .forms import EmailForm, LoginForm
 import pytz
 
 from .models import TempUser, DrchronoUser, User, DrchronoEmail
 
 def index(request):
-    return render(request, 'birthdayEmails/login.html', {'link_url': getDrchronoLinkURL()})
+    form = LoginForm()
+    return render(request, 'birthdayEmails/login.html', {'link_url': getDrchronoLinkURL(), 'form': form})
 
 def signup(request):
     code = request.GET.get('code')
@@ -23,7 +24,10 @@ def signup(request):
         if not TempUser.objects.filter(code=code).first():
             auth_data = getDrchronoAuth(code)
             if not auth_data:
-                return render(request, 'birthdayEmails/redirectToIndexWithMessage.html',{'message':"Something went wrong... Let's try again."})
+                form = LoginForm({})
+                form.add_error(None, "Something went wrong, please try again.")
+                form.errors['username'] = form.error_class()
+                return render(request, 'birthdayEmails/login.html', {'link_url': getDrchronoLinkURL(), 'form': form})
             auth_data['code'] = code
             TempUser.objects.create(**auth_data)
         return render(request, 'birthdayEmails/signup.html', {
@@ -31,7 +35,10 @@ def signup(request):
         })
 
 def newTokenNeeded(request):
-    return render(request, 'birthdayEmails/redirectToIndexWithMessage.html',{'message':"It's been too long... We need to re-validate your drchrono account."})
+    form = LoginForm({})
+    form.add_error(None, "It's been longer than 5 minutes... We need to start over.")
+    form.errors['username'] = form.error_class()
+    return render(request, 'birthdayEmails/login.html', {'link_url': getDrchronoLinkURL(), 'form': form})
 
 def createUser(request, code):
     if request.method == "POST":
@@ -77,19 +84,32 @@ def main(request):
     return render(request, 'birthdayEmails/main.html', {'patient_list': patient_details, 'form': form})
 
 def signIn(request):
-    username = request.POST['username']
-    password = request.POST['password']
-    user = authenticate(username=username, password=password)
-    if user is not None:
-        if user.is_active:
-            login(request, user)
-            return HttpResponseRedirect(reverse('birthdayEmails:main'))
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = LoginForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            form_data = form.cleaned_data
+            username = request.POST['username']
+            password = request.POST['password']
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+                    return HttpResponseRedirect(reverse('birthdayEmails:main'))
+                else:
+                    # Return a 'disabled account' error message
+                    form.add_error(None, "This account has been disabled")
+                    return render(request, 'birthdayEmails/login.html', {'link_url': getDrchronoLinkURL(), 'form': form})
+            else:
+                # Return an 'invalid login' error message.
+                form.add_error(None, "Invalid login credentials")
+                return render(request, 'birthdayEmails/login.html', {'link_url': getDrchronoLinkURL(), 'form': form})
         else:
-            # Return a 'disabled account' error message
-            return render(request, 'birthdayEmails/redirectToIndexWithMessage.html',{'message':"This account is inactive."})
+            return render(request, 'birthdayEmails/login.html', {'link_url': getDrchronoLinkURL(), 'form': form})
+    # if a GET (or any other method) create a blank form
     else:
-        # Return an 'invalid login' error message.
-        return render(request, 'birthdayEmails/redirectToIndexWithMessage.html',{'message':"Invalid credentials..."})
+        form = LoginForm()
 
 @login_required
 def signOut(request):
