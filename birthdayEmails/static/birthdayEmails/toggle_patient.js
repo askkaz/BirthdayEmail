@@ -20,7 +20,11 @@ $(".active-table").click(function() {
     //Remove save button for emails that have been sent
     if ($(this).hasClass("success")) {
         $(".save-btn").addClass("hidden");
+        $('#emailBody').prop('readonly', true);
+        $('#emailSubject').prop('readonly', true);
     } else {
         $(".save-btn").removeClass("hidden");
+        $('#emailBody').prop('readonly', false);
+        $('#emailSubject').prop('readonly', false);
     }
 });
