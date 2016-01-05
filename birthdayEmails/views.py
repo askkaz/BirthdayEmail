@@ -54,7 +54,6 @@ def createUser(request, code):
                 username = form_data['username']
                 if User.objects.filter(username=username):
                     form.add_error(None,'This username already exists.')
-                    #return render(request, 'birthdayEmails/invalidsignupcredentials.html', {'code':code})
                 else:
                     drchrono_user = User.objects.create_user(username, None, password)
                     birthday_user = DrchronoUser(user=drchrono_user, access_token=temp_user_data.access_token, 

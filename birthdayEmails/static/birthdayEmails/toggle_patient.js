@@ -18,9 +18,9 @@ $(".active-table").click(function() {
         $(".delete-btn").removeClass("hidden");
     }
     //Remove save button for emails that have been sent
-    if ($(this).children(".patient-email-sent").text() == "") {
-        $(".save-btn").removeClass("hidden");
-    } else {
+    if ($(this).hasClass("success")) {
         $(".save-btn").addClass("hidden");
+    } else {
+        $(".save-btn").removeClass("hidden");
     }
 });
