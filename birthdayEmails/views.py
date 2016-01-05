@@ -7,7 +7,7 @@ from django.utils import timezone
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from .forms import EmailForm, LoginForm
+from .forms import EmailForm, LoginForm, CreateAccountForm
 import pytz
 
 from .models import TempUser, DrchronoUser, User, DrchronoEmail
@@ -30,8 +30,10 @@ def signup(request):
                 return render(request, 'birthdayEmails/login.html', {'link_url': getDrchronoLinkURL(), 'form': form})
             auth_data['code'] = code
             TempUser.objects.create(**auth_data)
+            signup_form = CreateAccountForm()
         return render(request, 'birthdayEmails/signup.html', {
-            'code': code
+            'code': code,
+            'form': signup_form
         })
 
 def newTokenNeeded(request):
@@ -42,20 +44,29 @@ def newTokenNeeded(request):
 
 def createUser(request, code):
     if request.method == "POST":
+        form = CreateAccountForm(request.POST)
         #ensure the code was a recent token (5 minutes seems reasonable)
         temp_user_data = TempUser.objects.filter(code=code, created__gte=timezone.now()-datetime.timedelta(minutes=5)).first()
         if temp_user_data:
-            password = request.POST['password']
-            username = request.POST['username']
-            if len(password) < 5 or User.objects.filter(username=username):
-                return render(request, 'birthdayEmails/invalidsignupcredentials.html', {'code':code})
-            drchrono_user = User.objects.create_user(username, None, password)
-            birthday_user = DrchronoUser(user=drchrono_user, access_token=temp_user_data.access_token, 
-                refresh_token=temp_user_data.refresh_token, expires_timestamp=temp_user_data.expires_timestamp)
-            birthday_user.save()
-            user = authenticate(username=username, password=password)
-            login(request, user)
-            return HttpResponseRedirect(reverse('birthdayEmails:main'))
+            if form.is_valid():
+                form_data = form.cleaned_data
+                password = form_data['password']
+                username = form_data['username']
+                if User.objects.filter(username=username):
+                    form.add_error(None,'This username already exists.')
+                    #return render(request, 'birthdayEmails/invalidsignupcredentials.html', {'code':code})
+                else:
+                    drchrono_user = User.objects.create_user(username, None, password)
+                    birthday_user = DrchronoUser(user=drchrono_user, access_token=temp_user_data.access_token, 
+                        refresh_token=temp_user_data.refresh_token, expires_timestamp=temp_user_data.expires_timestamp)
+                    birthday_user.save()
+                    user = authenticate(username=username, password=password)
+                    login(request, user)
+                    return HttpResponseRedirect(reverse('birthdayEmails:main'))
+            return render(request, 'birthdayEmails/signup.html', {
+                'code': code,
+                'form': form
+            })
         else:
             return HttpResponseRedirect(reverse('birthdayEmails:newTokenNeeded'))
 
@@ -90,8 +101,8 @@ def signIn(request):
         # check whether it's valid:
         if form.is_valid():
             form_data = form.cleaned_data
-            username = request.POST['username']
-            password = request.POST['password']
+            username = form_data['username']
+            password = form_data['password']
             user = authenticate(username=username, password=password)
             if user is not None:
                 if user.is_active:
